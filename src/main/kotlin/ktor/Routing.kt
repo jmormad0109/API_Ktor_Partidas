@@ -3,7 +3,8 @@ package ktor
 import domain.models.partidas.Partida
 import domain.models.partidas.Resultado
 import domain.models.partidas.UpdatePartida
-import domain.usecase.UseCaseProvider
+import domain.models.usuarios.UpdateUsuario
+import domain.usecase.partidas.UseCaseProviderPartidas
 import io.ktor.http.*
 import io.ktor.serialization.*
 import io.ktor.server.application.*
@@ -25,7 +26,7 @@ fun Application.configureRouting() {
             val nombrePartida = call.request.queryParameters["nombre"]
 
             if (nombrePartida != null){
-                val partida = UseCaseProvider.getPartidasByNombre(nombrePartida)
+                val partida = UseCaseProviderPartidas.getPartidasByNombre(nombrePartida)
                 if (partida == null){
                     call.respond(HttpStatusCode.NotFound, "Partida no encontrada")
                 }else{
@@ -40,7 +41,7 @@ fun Application.configureRouting() {
             if (resultado != null){
                 try{
                     val resul = resultado.uppercase()
-                    val partidas = UseCaseProvider.getPartidasByResultado(Resultado.valueOf(resultado.uppercase()))
+                    val partidas = UseCaseProviderPartidas.getPartidasByResultado(Resultado.valueOf(resultado.uppercase()))
                     call.respond(partidas)
 
                     return@get
@@ -48,7 +49,7 @@ fun Application.configureRouting() {
                     call.respond(HttpStatusCode.BadRequest, "El resultado no es valido")
                 }
             }else{
-                val partidas = UseCaseProvider.getAllPartidas()
+                val partidas = UseCaseProviderPartidas.getAllPartidas()
                 call.respond(partidas)
                 return@get
             }
@@ -62,7 +63,7 @@ fun Application.configureRouting() {
                 return@get
             }
 
-            val partida = UseCaseProvider.getPartidasByNombre(nombrePartida)
+            val partida = UseCaseProviderPartidas.getPartidasByNombre(nombrePartida)
             if (partida == null){
                 call.respond(HttpStatusCode.NotFound, "Partida no encontrada")
                 return@get
@@ -77,7 +78,7 @@ fun Application.configureRouting() {
         post("/partida"){
             try{
                 val part = call.receive<Partida>()
-                val res = UseCaseProvider.insertPartida(part)
+                val res = UseCaseProviderPartidas.insertPartida(part)
                 if (!res){
                     call.respond(HttpStatusCode.Conflict, "No se pudo insertar la partida. Puede que ya exista")
                     return@post
@@ -97,7 +98,7 @@ fun Application.configureRouting() {
                 val nombre = call.parameters["nombrePartida"]
                 nombre?.let {
                     val updatePartida = call.receive<UpdatePartida>()
-                    val res = UseCaseProvider.updatePartida(updatePartida, nombre)
+                    val res = UseCaseProviderPartidas.updatePartida(updatePartida, nombre)
                     if (!res){
                         call.respond(HttpStatusCode.Conflict, "La partida no se ha modificádo. Puede que no exita")
                         return@patch
@@ -118,7 +119,7 @@ fun Application.configureRouting() {
             val nombre = call.parameters["nombrePartida"]
 
             nombre?.let {
-                val res = UseCaseProvider.deletePartida(nombre)
+                val res = UseCaseProviderPartidas.deletePartida(nombre)
                 if (!res){
                     call.respond(HttpStatusCode.NotFound, "Partida no encontrada")
                 }else{
@@ -135,6 +136,13 @@ fun Application.configureRouting() {
         // Static plugin. Try to access `/static/index.html`
         staticResources("/static", "static")
     }
+
+    /*routing {
+        post("/auth"){
+            val loginRequest = call.receive<UpdateUsuario>()
+            val isLogin =
+        }
+    }*/
 
 
 }

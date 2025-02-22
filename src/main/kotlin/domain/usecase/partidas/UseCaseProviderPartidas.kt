@@ -1,18 +1,17 @@
-package domain.usecase
+package domain.usecase.partidas
 
 import data.persistence.repository.PersistencePartidaRepository
 import domain.models.partidas.Partida
 import domain.models.partidas.Resultado
 import domain.models.partidas.UpdatePartida
-import domain.usecase.partidas.*
 
-object UseCaseProvider {
+object UseCaseProviderPartidas {
 
     private val repository = PersistencePartidaRepository()
     //val logger: Logger = LoggerFactory.getLogger("PartidaUseCaseLogger")
 
     private val getAllPartidasUseCase = GetAllPartidasUseCase(repository)
-    private val getPartidasByNombre = GetPartidasByNombre(repository)
+    private val getPartidasByNombreUsecase = GetPartidasByNombre(repository)
     private val getPartidaByResultadoUseCase = GetPartidaByResultadoUseCase(repository)
     private val insertPartidaUseCase = InsertPartidaUseCase(repository)
     private val updatePartidaUseCae = UpdatePartidaUseCae(repository)
@@ -26,8 +25,8 @@ object UseCaseProvider {
         if (nombre.isNullOrBlank()){
             return null
         }
-        getPartidasByNombre.nombre = nombre
-        val part = getPartidasByNombre()
+        getPartidasByNombreUsecase.nombre = nombre
+        val part = getPartidasByNombreUsecase()
 
         if (part == null){
             return null
