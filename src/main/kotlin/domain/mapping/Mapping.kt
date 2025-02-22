@@ -9,8 +9,7 @@ fun PartidaDaoToPartida (partidaDao: PartidaDao) : Partida {
         partidaDao.nombrePartida,
         partidaDao.resultado.toResultado(),
         partidaDao.estadistica,
-        partidaDao.fecha,
-        partidaDao.token?: ""
+        partidaDao.fecha
     )
 
     return partida

@@ -8,6 +8,7 @@ import domain.models.partidas.Partida
 import domain.models.partidas.Resultado
 import domain.models.partidas.UpdatePartida
 import domain.repository.PartidaInterface
+import io.ktor.util.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.update
@@ -66,7 +67,7 @@ class PersistencePartidaRepository: PartidaInterface {
             suspendTransaction {
                 filas = PartidaTable.update({ PartidaTable.nombrePartida eq nombreNuevo}) { part ->
                     partida.nombrePartida?.let { part[nombrePartida] = it }
-                    partida.resultado?.let { part[resultado] = it }
+                    partida.resultado?.let { part[resultado] = it.toString() }
                     partida.estadistica?.let { part[estadistica] = it }
                     partida.fecha?.let { part[fecha] = it }
                     partida.token?.let { part[token] = it }

@@ -1,7 +1,7 @@
-package com.example.ktor
+package ktor
 
+import com.example.ktor.configureSerialization
 import io.ktor.server.application.*
-import ktor.configureDatabase
 
 fun main(args: Array<String>) {
     io.ktor.server.netty.EngineMain.main(args)
