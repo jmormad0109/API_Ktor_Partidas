@@ -4,9 +4,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UpdateUsuario(
-    val name: String? = null,
-    val dni: String? = null,
-    val email: String? = null,
-    val password: String? = null,
-    val token: String? = null
+    var name: String? = null,
+    var dni: String? = null,
+    var email: String? = null,
+    var password: String? = null,
+    var token: String? = null
 )

@@ -1,4 +1,4 @@
-package domain.usecase
+package domain.usecase.partidas
 
 import domain.models.partidas.Partida
 import domain.models.partidas.Resultado

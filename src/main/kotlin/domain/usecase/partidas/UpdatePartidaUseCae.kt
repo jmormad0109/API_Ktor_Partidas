@@ -1,4 +1,4 @@
-package domain.usecase
+package domain.usecase.partidas
 
 import domain.models.partidas.UpdatePartida
 import domain.repository.PartidaInterface

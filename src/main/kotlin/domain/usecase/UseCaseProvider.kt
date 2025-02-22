@@ -4,8 +4,7 @@ import data.persistence.repository.PersistencePartidaRepository
 import domain.models.partidas.Partida
 import domain.models.partidas.Resultado
 import domain.models.partidas.UpdatePartida
-import io.ktor.util.logging.*
-import org.slf4j.LoggerFactory
+import domain.usecase.partidas.*
 
 object UseCaseProvider {
 
