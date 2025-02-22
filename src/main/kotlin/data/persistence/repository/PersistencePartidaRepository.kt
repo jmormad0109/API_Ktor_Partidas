@@ -2,7 +2,7 @@ package data.persistence.repository
 
 import data.persistence.partidas.PartidaDao
 import data.persistence.partidas.PartidaTable
-import data.persistence.partidas.suspendTransaction
+import data.persistence.suspendTransaction
 import domain.mapping.PartidaDaoToPartida
 import domain.models.partidas.Partida
 import domain.models.partidas.Resultado
@@ -52,7 +52,6 @@ class PersistencePartidaRepository: PartidaInterface {
                     this.resultado = partida.resultado.toString()
                     this.estadistica = partida.estadistica
                     this.fecha = partida.fecha
-                    this.token = partida.token
                 }
             }
             true
@@ -70,7 +69,6 @@ class PersistencePartidaRepository: PartidaInterface {
                     partida.resultado?.let { part[resultado] = it.toString() }
                     partida.estadistica?.let { part[estadistica] = it }
                     partida.fecha?.let { part[fecha] = it }
-                    partida.token?.let { part[token] = it }
 
                 }
             }
