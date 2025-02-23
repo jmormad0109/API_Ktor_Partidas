@@ -5,6 +5,7 @@ import domain.models.partidas.Resultado
 import domain.models.partidas.UpdatePartida
 import domain.models.usuarios.UpdateUsuario
 import domain.usecase.partidas.UseCaseProviderPartidas
+import domain.usecase.usuarios.UseCaseProviderUsuarios
 import io.ktor.http.*
 import io.ktor.serialization.*
 import io.ktor.server.application.*
@@ -137,12 +138,35 @@ fun Application.configureRouting() {
         staticResources("/static", "static")
     }
 
-    /*routing {
+    routing {
         post("/auth"){
             val loginRequest = call.receive<UpdateUsuario>()
-            val isLogin =
+            val isLogin = UseCaseProviderUsuarios.login(loginRequest.dni, loginRequest.password)
+
+            if (isLogin){
+                call.respond(HttpStatusCode.OK, "Usuario logueado con dni: ${loginRequest.dni}")
+            }else{
+                call.respond(HttpStatusCode.Unauthorized, "Usuario incorrecto")
+            }
         }
-    }*/
+
+        post("/register"){
+            try{
+                val user = call.receive<UpdateUsuario>()
+                val register = UseCaseProviderUsuarios.register(user)
+
+                if (register != null){
+                    call.respond(HttpStatusCode.Created, "Usuario registrado correctamente")
+                }else{
+                    call.respond(HttpStatusCode.Conflict, "No se ha podido registrar correctamente")
+                }
+            }catch (e: IllegalStateException){
+                call.respond(HttpStatusCode.BadRequest, "Error en el formato del body")
+            }catch (e: JsonConvertException){
+                call.respond(HttpStatusCode.BadRequest, "Problemas en la conversión json")
+            }
+        }
+    }
 
 
 }
