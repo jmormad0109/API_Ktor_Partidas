@@ -8,5 +8,5 @@ data class Usuario(
     val dni: String,
     val email: String,
     val password: String,
-    val token: String? = null
+    var token: String? = null
 )

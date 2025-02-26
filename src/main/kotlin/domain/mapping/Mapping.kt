@@ -4,6 +4,7 @@ import data.persistence.partidas.PartidaDao
 import data.persistence.usuarios.UsuarioDao
 import domain.models.partidas.Partida
 import domain.models.partidas.Resultado
+import domain.models.usuarios.UpdateUsuario
 import domain.models.usuarios.Usuario
 
 fun PartidaDaoToPartida (partidaDao: PartidaDao) : Partida {
@@ -34,4 +35,24 @@ fun UsuarioDaoToUsuario(usuarioDao: UsuarioDao): Usuario{
         usuarioDao.token
     )
     return usuario
+}
+
+fun Usuario.toUpdateUsuario(): UpdateUsuario {
+    return UpdateUsuario(
+        dni = dni,
+        name = name,
+        email = email,
+        password = password,
+        token = token
+    )
+}
+
+fun UpdateUsuario.toUsuario(): Usuario {
+    return Usuario(
+        dni = dni!!,
+        name = name!!,
+        email = email!!,
+        password = password!!,
+        token = token!!
+    )
 }

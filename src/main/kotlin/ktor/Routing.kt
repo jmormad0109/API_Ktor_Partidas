@@ -1,29 +1,25 @@
 package ktor
 
-import domain.models.partidas.Partida
-import domain.models.partidas.Resultado
-import domain.models.partidas.UpdatePartida
-import domain.models.usuarios.UpdateUsuario
-import domain.usecase.partidas.UseCaseProviderPartidas
-import domain.usecase.usuarios.UseCaseProviderUsuarios
-import io.ktor.http.*
-import io.ktor.serialization.*
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*
-import io.ktor.server.request.*
-import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import ktor.routing.authRouting
+import ktor.routing.partidasRouting
 
 fun Application.configureRouting() {
     routing {
 
-        //EndPoint de ejemplo
-        get("/") {
-            call.respondText("Hello World!")
-        }
+        authRouting()
+        partidasRouting()
 
 
-        get("/partida") {
+
+        // Static plugin. Try to access `/static/index.html`
+        staticResources("/static", "static")
+    }
+
+
+        /*get("/partida") {
             val nombrePartida = call.request.queryParameters["nombre"]
 
             if (nombrePartida != null){
@@ -133,41 +129,7 @@ fun Application.configureRouting() {
 
             return@delete
         }
-
-
-        // Static plugin. Try to access `/static/index.html`
-        staticResources("/static", "static")
-    }
-
-    routing {
-        post("/auth"){
-            val loginRequest = call.receive<UpdateUsuario>()
-            val isLogin = UseCaseProviderUsuarios.login(loginRequest.dni, loginRequest.password)
-
-            if (isLogin){
-                call.respond(HttpStatusCode.OK, "Usuario logueado con dni: ${loginRequest.dni}")
-            }else{
-                call.respond(HttpStatusCode.Unauthorized, "Usuario incorrecto:  ${isLogin}")
-            }
-        }
-
-        post("/register"){
-            try{
-                val user = call.receive<UpdateUsuario>()
-                val register = UseCaseProviderUsuarios.register(user)
-
-                if (register != null){
-                    call.respond(HttpStatusCode.Created, "Usuario registrado correctamente")
-                }else{
-                    call.respond(HttpStatusCode.Conflict, "No se ha podido registrar correctamente")
-                }
-            }catch (e: IllegalStateException){
-                call.respond(HttpStatusCode.BadRequest, "Error en el formato del body")
-            }catch (e: JsonConvertException){
-                call.respond(HttpStatusCode.BadRequest, "Problemas en la conversión json")
-            }
-        }
-    }
+    }*/
 
 
 }
