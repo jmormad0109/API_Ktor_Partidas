@@ -1,9 +1,9 @@
 package domain.usecase.usuarios
 
-import data.persistence.repository.PersistenceUsuarioRepository
 import domain.models.usuarios.Usuario
+import domain.repository.UsuarioInteface
 
-class GetUsuarioByDniUseCase(val repository: PersistenceUsuarioRepository) {
+class GetUsuarioByDniUseCase(val repository: UsuarioInteface) {
 
     var dni: String? = null
 

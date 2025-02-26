@@ -1,8 +1,8 @@
 package domain.usecase.usuarios
 
-import data.persistence.repository.PersistenceUsuarioRepository
+import domain.repository.UsuarioInteface
 
-class LoginUseCase(val repository: PersistenceUsuarioRepository) {
+class LoginUseCase(val repository: UsuarioInteface) {
 
     suspend operator fun invoke(dni: String?, password: String?): Boolean{
         if (dni.isNullOrBlank() || password.isNullOrBlank())

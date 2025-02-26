@@ -90,7 +90,7 @@ fun Application.configureRouting() {
             }catch (e: JsonConvertException){
                 call.respond(HttpStatusCode.BadRequest, "Problema en la conversión json")
             }catch (e: Exception){
-                call.respond(HttpStatusCode.BadRequest, "Error en los datos de la petición" + e.message)
+                call.respond(HttpStatusCode.BadRequest, "Error en los datos de la petición  ..." + e.message)
             }
         }
 
@@ -119,12 +119,13 @@ fun Application.configureRouting() {
         delete("/partida/{nombrePartida}"){
             val nombre = call.parameters["nombrePartida"]
 
+            //val existe =
             nombre?.let {
                 val res = UseCaseProviderPartidas.deletePartida(nombre)
                 if (!res){
                     call.respond(HttpStatusCode.NotFound, "Partida no encontrada")
                 }else{
-                    call.respond(HttpStatusCode.NoContent)
+                    call.respond(HttpStatusCode.OK, "Parida eliminada correctamente")
                 }
             }?:run{
                 call.respond(HttpStatusCode.NoContent, "Tienes que identificar el nombre de la partida")
@@ -146,7 +147,7 @@ fun Application.configureRouting() {
             if (isLogin){
                 call.respond(HttpStatusCode.OK, "Usuario logueado con dni: ${loginRequest.dni}")
             }else{
-                call.respond(HttpStatusCode.Unauthorized, "Usuario incorrecto")
+                call.respond(HttpStatusCode.Unauthorized, "Usuario incorrecto:  ${isLogin}")
             }
         }
 

@@ -1,10 +1,10 @@
 package domain.usecase.usuarios
 
-import data.persistence.repository.PersistenceUsuarioRepository
 import domain.models.usuarios.UpdateUsuario
 import domain.models.usuarios.Usuario
+import domain.repository.UsuarioInteface
 
-class RegisterUseCase(val repository: PersistenceUsuarioRepository) {
+class RegisterUseCase(val repository: UsuarioInteface) {
     suspend operator fun invoke(usuario: UpdateUsuario): Usuario?{
 
         usuario.dni = usuario.dni!!
