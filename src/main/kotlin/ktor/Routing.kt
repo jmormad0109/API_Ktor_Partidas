@@ -90,7 +90,7 @@ fun Application.configureRouting() {
             }catch (e: JsonConvertException){
                 call.respond(HttpStatusCode.BadRequest, "Problema en la conversión json")
             }catch (e: Exception){
-                call.respond(HttpStatusCode.BadRequest, "Error en los datos de la petición  ..." + e.message)
+                call.respond(HttpStatusCode.BadRequest, "Error en los datos de la petición  ..." + e.message + e.printStackTrace())
             }
         }
 

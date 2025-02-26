@@ -1,6 +1,6 @@
 CREATE TABLE Partida(
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(50),
+    nombre VARCHAR(50) UNIQUE NOT NULL,
     resultado VARCHAR(20),
     estadistica VARCHAR(5),
     fecha VARCHAR(12)
