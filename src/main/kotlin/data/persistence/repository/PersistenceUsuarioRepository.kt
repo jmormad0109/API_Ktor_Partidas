@@ -5,28 +5,34 @@ import data.persistence.usuarios.UsuarioDao
 import data.persistence.usuarios.UsuarioTable
 import data.security.PasswordHash
 import domain.mapping.UsuarioDaoToUsuario
+import domain.mapping.toUsuario
 import domain.models.usuarios.UpdateUsuario
 import domain.models.usuarios.Usuario
 import domain.repository.UsuarioInteface
+import org.jetbrains.exposed.sql.update
 
 class PersistenceUsuarioRepository: UsuarioInteface {
     override suspend fun getUsuarioByDni(dni: String): Usuario? {
         return suspendTransaction {
             UsuarioDao.find{
                 UsuarioTable.dni eq dni
-            }.limit(1).map(::UsuarioDaoToUsuario).firstOrNull()
+            }.limit(1).map{it.toUsuario()}.firstOrNull()
         }
     }
 
-    override suspend fun login(dni: String, password: String): Boolean {
-        val usuario = getUsuarioByDni(dni)?: return false
+    override suspend fun login(dni: String, password: String): Usuario? {
+        val usuario = getUsuarioByDni(dni)?: return null
 
         return try{
             val posibleHash = PasswordHash.hash(password)
-            posibleHash == usuario.password
+            if (posibleHash == usuario.password){
+                usuario
+            }else {
+                null
+            }
         }catch (e: Exception){
             println("Error en la autenticación: ${e.localizedMessage}")
-            false
+            null
         }
     }
 
@@ -40,12 +46,29 @@ class PersistenceUsuarioRepository: UsuarioInteface {
                     this.email = usuario.email!!
                     this.token = usuario.token!!
                 }
-            }.let {
-                UsuarioDaoToUsuario(it)
-            }
+            }.toUsuario()
         }catch (e: Exception){
             println("Error en el registro del usuario: ${e.localizedMessage}")
             null
         }
+    }
+
+    override suspend fun updateUsuario(updateUsuario: UpdateUsuario, dni: String): Boolean {
+        var num = 0
+        try {
+            suspendTransaction {
+                num = UsuarioTable.update({UsuarioTable.dni eq dni}) {
+                    user ->
+                        updateUsuario.name?.let{ user[name] = it }
+                        updateUsuario.email?.let { user[email] = it }
+                        updateUsuario.password?.let { user[password] = it }
+                        updateUsuario.token?.let { user[token] = it }
+                }
+            }
+        }catch (e: Exception){
+            e.printStackTrace()
+            false
+        }
+        return num == 1
     }
 }

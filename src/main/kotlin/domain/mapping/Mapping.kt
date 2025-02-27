@@ -56,3 +56,14 @@ fun UpdateUsuario.toUsuario(): Usuario {
         token = token!!
     )
 }
+
+fun UsuarioDao.toUsuario(): Usuario{
+    val usuario = Usuario(
+        this.dni,
+        this.name,
+        this.email,
+        this.password,
+        this.token?: "null"
+    )
+    return usuario
+}

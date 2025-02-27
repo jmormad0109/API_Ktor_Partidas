@@ -13,7 +13,7 @@ class RegisterUseCase(val repository: UsuarioInteface) {
         usuario.email = usuario.email!!
         usuario.token = usuario.token?: ""
 
-        if (repository.login(usuario.dni!!, usuario.password!!)){
+        if (repository.login(usuario.dni!!, usuario.password!!) != null){
             return null
         }else{
             return repository.register(usuario)

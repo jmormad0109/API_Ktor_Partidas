@@ -26,7 +26,7 @@ object UseCaseProviderUsuarios {
         }
     }
 
-    suspend fun login(dni: String?, password: String?) = loginUseCase(dni, password)
+    suspend fun login(dni: String?, password: String?): Usuario? = loginUseCase(dni, password)
 
     suspend fun register(usuario: UpdateUsuario): Usuario? {
         if (usuario.dni.isNullOrBlank() || usuario.name.isNullOrBlank() || usuario.password.isNullOrBlank()){
