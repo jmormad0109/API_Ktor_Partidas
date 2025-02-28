@@ -10,8 +10,8 @@ class DeletePartidauseCase(val repository: PartidaInterface) {
         if (nombre == null){
             return false
         }else{
-            repository.deletePartida(nombre!!)
-            return true
+            return repository.deletePartida(nombre!!)
+
         }
     }
 }
