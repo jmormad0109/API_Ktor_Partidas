@@ -102,6 +102,11 @@ fun Route.partidasRouting(){
             }
 
             patch("{nombrePartida}"){
+                val token = call.request.headers["Authorization"]?.removePrefix("Bearer ") //token el header
+                val validate = call.validateToken(token!!)  //si llega aqúi, es porque el token se ha verificado antes automaticamente
+                if (!validate) {
+                    return@patch
+                }
                 try{
                     val nombre = call.parameters["nombrePartida"]
                     nombre?.let {
@@ -124,6 +129,11 @@ fun Route.partidasRouting(){
             }
 
             delete("{nombrePartida}"){
+                val token = call.request.headers["Authorization"]?.removePrefix("Bearer ") //token el header
+                val validate = call.validateToken(token!!)  //si llega aqúi, es porque el token se ha verificado antes automaticamente
+                if (!validate) {
+                    return@delete
+                }
                 val nombre = call.parameters["nombrePartida"]
 
                 //val existe =
