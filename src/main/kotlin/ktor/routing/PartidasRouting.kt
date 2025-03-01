@@ -1,5 +1,6 @@
 package ktor.routing
 
+import domain.mapping.toUpdatePartida
 import domain.models.partidas.Partida
 import domain.models.partidas.Resultado
 import domain.models.partidas.UpdatePartida
@@ -10,55 +11,63 @@ import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import ktor.validateToken
 
 fun Route.partidasRouting(){
 
     route("/partida"){
         authenticate("jwt-auth"){
             get() {
-                val nombrePartida = call.request.queryParameters["nombre"]
 
-                if (nombrePartida != null){
+                val token = call.request.headers["Authorization"]?.removePrefix("Bearer ")
+                val validate = call.validateToken(token!!)
+                if (!validate){
+                    return@get
+                }
+
+                val nombrePartida = call.request.queryParameters["nombrePartida"]
+                if(nombrePartida != null){
                     val partida = UseCaseProviderPartidas.getPartidasByNombre(nombrePartida)
                     if (partida == null){
-                        call.respond(HttpStatusCode.NotFound, "Partida no encontrada")
+                        call.respond(HttpStatusCode.NotFound, "No se ha encontrado la partida")
                     }else{
-                        call.respond(partida)
+                        val upPartida = partida.toUpdatePartida()
+                        call.respond(upPartida)
                     }
-
                     return@get
                 }
 
                 val resultado = call.request.queryParameters["resultado"]
-
                 if (resultado != null){
                     try{
                         val resul = resultado.uppercase()
                         val partidas = UseCaseProviderPartidas.getPartidasByResultado(Resultado.valueOf(resultado.uppercase()))
                         call.respond(partidas)
-
-                        return@get
                     }catch (e: IllegalArgumentException){
-                        call.respond(HttpStatusCode.BadRequest, "El resultado no es valido")
+                        call.respond(HttpStatusCode.BadRequest, "El el resultado no es un valor válido")
                     }
                 }else{
                     val partidas = UseCaseProviderPartidas.getAllPartidas()
                     call.respond(partidas)
-                    return@get
                 }
             }
 
             get("{nombrePartida}"){
-                val nombrePartida = call.parameters["nombrePartida"]
+                val token = call.request.headers["Authorization"]?.removePrefix("Bearer ")
+                val validate = call.validateToken(token!!)
+                if (!validate){
+                    return@get
+                }
 
+                val nombrePartida = call.parameters["nombrePartida"]
                 if (nombrePartida == null){
-                    call.respond(HttpStatusCode.BadRequest, "Debes pasar el nombre de la partida que quieres buscar")
+                    call.respond(HttpStatusCode.BadRequest, "Debes proporcionar el nombre de la partida que quieres buscar")
                     return@get
                 }
 
                 val partida = UseCaseProviderPartidas.getPartidasByNombre(nombrePartida)
                 if (partida == null){
-                    call.respond(HttpStatusCode.NotFound, "Partida no encontrada")
+                    call.respond(HttpStatusCode.NotFound, "No se ha encontrado la partida. Puede que no exista.")
                     return@get
                 }
                 call.respond(partida)
@@ -69,20 +78,26 @@ fun Route.partidasRouting(){
             }
 
             post(){
+                val token = call.request.headers["Authorization"]?.removePrefix("Bearer ") //token el header
+                val validate = call.validateToken(token!!)  //si llega aqúi, es porque el token se ha verificado antes automaticamente
+                if (!validate) {
+                    return@post
+                }
+
                 try{
-                    val part = call.receive<Partida>()
-                    val res = UseCaseProviderPartidas.insertPartida(part)
+                    val partida = call.receive<Partida>()
+                    val res = UseCaseProviderPartidas.insertPartida(partida)
                     if (!res){
-                        call.respond(HttpStatusCode.Conflict, "No se pudo insertar la partida. Puede que ya exista")
+                        call.respond(HttpStatusCode.Conflict, "No se ha insertado la partida. Puede que ya exista.")
                         return@post
                     }
                     call.respond(HttpStatusCode.Created, "Se ha insertado la nueva partida")
                 }catch (e: IllegalStateException){
-                    call.respond(HttpStatusCode.BadRequest, "Error en el formato de la petición")
+                    call.respond(HttpStatusCode.BadRequest, "Error en el formato de envío de los datos")
                 }catch (e: JsonConvertException){
-                    call.respond(HttpStatusCode.BadRequest, "Problema en la conversión json")
+                    call.respond(HttpStatusCode.BadRequest, "Error en la transformación del JSON")
                 }catch (e: Exception){
-                    call.respond(HttpStatusCode.BadRequest, "Error en los datos de la petición  ..." + e.message + e.printStackTrace())
+                    call.respond(HttpStatusCode.BadRequest, "Error en los datos. Faltan datos." + e.message)
                 }
             }
 

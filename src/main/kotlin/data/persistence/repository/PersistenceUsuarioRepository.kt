@@ -42,7 +42,7 @@ class PersistenceUsuarioRepository: UsuarioInteface {
                 UsuarioDao.new {
                     this.name = usuario.name!!
                     this.dni = usuario.dni!!
-                    this.password = usuario.password!!
+                    this.password = PasswordHash.hash(usuario.password!!)
                     this.email = usuario.email!!
                     this.token = usuario.token!!
                 }

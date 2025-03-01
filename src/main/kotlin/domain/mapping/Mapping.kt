@@ -4,6 +4,7 @@ import data.persistence.partidas.PartidaDao
 import data.persistence.usuarios.UsuarioDao
 import domain.models.partidas.Partida
 import domain.models.partidas.Resultado
+import domain.models.partidas.UpdatePartida
 import domain.models.usuarios.UpdateUsuario
 import domain.models.usuarios.Usuario
 
@@ -24,6 +25,15 @@ fun String.toResultado(): Resultado {
     }catch (e: IllegalArgumentException){
         Resultado.PERDIDA
     }
+}
+
+fun Partida.toUpdatePartida(): UpdatePartida{
+    return UpdatePartida(
+        nombrePartida = nombrePartida,
+        resultado = resultado,
+        estadistica = estadistica,
+        fecha = fecha
+    )
 }
 
 fun UsuarioDaoToUsuario(usuarioDao: UsuarioDao): Usuario{
@@ -49,8 +59,8 @@ fun Usuario.toUpdateUsuario(): UpdateUsuario {
 
 fun UpdateUsuario.toUsuario(): Usuario {
     return Usuario(
-        dni = dni!!,
         name = name!!,
+        dni = dni!!,
         email = email!!,
         password = password!!,
         token = token!!
@@ -59,8 +69,8 @@ fun UpdateUsuario.toUsuario(): Usuario {
 
 fun UsuarioDao.toUsuario(): Usuario{
     val usuario = Usuario(
-        this.dni,
         this.name,
+        this.dni,
         this.email,
         this.password,
         this.token?: "null"

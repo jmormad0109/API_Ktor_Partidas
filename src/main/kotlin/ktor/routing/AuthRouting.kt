@@ -21,7 +21,7 @@ fun Route.authRouting(){
 
                 if (login != null){
                     val usuario = login.toUpdateUsuario()
-                    usuario.token = login!!.token
+                    usuario.token = login.token
                     call.respond(HttpStatusCode.OK, usuario)
                 }else{
                     call.respond(HttpStatusCode.Unauthorized, "Error en la autenticación")

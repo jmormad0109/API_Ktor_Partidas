@@ -33,11 +33,11 @@ class PersistencePartidaRepository: PartidaInterface {
     }
 
     //Filtro por el nombre de la partida
-    override suspend fun getPartidasByNombre(nombrePartida: String): Partida {
+    override suspend fun getPartidasByNombre(nombrePartida: String): Partida? {
         return suspendTransaction {
             PartidaDao.find{
                 PartidaTable.nombrePartida eq nombrePartida
-            }.limit(1).map(::PartidaDaoToPartida).firstOrNull()!!
+            }.limit(1).map(::PartidaDaoToPartida).firstOrNull()
         }
     }
 

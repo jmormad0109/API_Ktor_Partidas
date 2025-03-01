@@ -10,8 +10,8 @@ class InsertPartidaUseCase(val repository: PartidaInterface) {
         if (partida == null){
             return false
         }else{
-            repository.postPartida(partida!!)
-            return true
+            return repository.postPartida(partida!!)
+
         }
     }
 }

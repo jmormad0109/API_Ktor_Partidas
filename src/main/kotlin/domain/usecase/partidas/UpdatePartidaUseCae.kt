@@ -12,8 +12,8 @@ class UpdatePartidaUseCae(val repository: PartidaInterface) {
         if (nuevaPartida == null || nombre == null){
             return false
         }else{
-            repository.updatePartida(nuevaPartida!!, nombre!!)
-            return true
+            return repository.updatePartida(nuevaPartida!!, nombre!!)
+
         }
     }
 }
