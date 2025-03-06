@@ -19,14 +19,14 @@ object UseCaseProviderPartidas {
 
 
 
-    suspend fun getAllPartidas(userId: Int) = getAllPartidasUseCase(userId)
+    suspend fun getAllPartidas() = getAllPartidasUseCase()
 
-    suspend fun getPartidasByNombre(nombre: String, userId: Int): Partida?{
+    suspend fun getPartidasByNombre(nombre: String): Partida?{
         if (nombre.isNullOrBlank()){
             return null
         }
         getPartidasByNombreUsecase.nombre = nombre
-        val part = getPartidasByNombreUsecase(userId)
+        val part = getPartidasByNombreUsecase()
 
         if (part == null){
             return null
@@ -35,9 +35,9 @@ object UseCaseProviderPartidas {
         }
     }
 
-    suspend fun getPartidasByResultado(resultado: Resultado, userId: Int): List<Partida>{
+    suspend fun getPartidasByResultado(resultado: Resultado): List<Partida>{
         getPartidaByResultadoUseCase.resultado = resultado
-        return getPartidaByResultadoUseCase(userId)
+        return getPartidaByResultadoUseCase()
     }
 
 

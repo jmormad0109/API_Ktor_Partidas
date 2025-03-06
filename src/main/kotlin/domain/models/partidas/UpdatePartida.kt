@@ -7,6 +7,5 @@ data class UpdatePartida(
     var nombrePartida: String? = null,
     var resultado: Resultado? = null,
     var estadistica: String? = null,
-    var fecha: String? = null,
-    var usuarioId: Int? = null
+    var fecha: String? = null
 )
