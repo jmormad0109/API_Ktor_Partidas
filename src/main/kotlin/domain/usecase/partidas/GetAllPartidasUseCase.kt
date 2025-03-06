@@ -5,5 +5,5 @@ import domain.repository.PartidaInterface
 
 class GetAllPartidasUseCase(val repository: PartidaInterface) {
 
-    suspend operator fun invoke(): List<Partida> = repository.getAllPartidas()
+    suspend operator fun invoke(userId: Int): List<Partida> = repository.getAllPartidas(userId)
 }

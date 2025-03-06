@@ -3,6 +3,7 @@ package domain.security
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import io.ktor.server.auth.jwt.*
+import kotlin.math.log
 
 object JwtConfig {
     private const val secret = "Secreto_123"
@@ -11,12 +12,12 @@ object JwtConfig {
     private const val realm = "ktor_realm"
     private val algorithm = Algorithm.HMAC256(secret)
 
-    fun generateToken(dni: String): String {
+    fun generateToken(userId: Int): String {
         return JWT.create()
             .withIssuer(issuer)
             .withAudience(audience)
             .withSubject("Authentication")
-            .withClaim("dni", dni)
+            .withClaim("userId", userId)
             .withClaim("time", System.currentTimeMillis())
             .sign(algorithm)
     }
@@ -30,9 +31,17 @@ object JwtConfig {
                 .build()
         )
         config.validate { credential ->
-            if (credential.payload.getClaim("dni").asString() != null) {
+            if (credential.payload.getClaim("userId").asInt() != null) {
                 JWTPrincipal(credential.payload)
-            }else null
+            } else null
+        }
+    }
+
+    fun getUserIdFromToken(token: String): Int?{
+        return try{
+            JWT.decode(token).getClaim("userId").asInt()
+        }catch(e: Exception){
+            null
         }
     }
 }

@@ -13,7 +13,8 @@ fun PartidaDaoToPartida (partidaDao: PartidaDao) : Partida {
         partidaDao.nombrePartida,
         partidaDao.resultado.toResultado(),
         partidaDao.estadistica,
-        partidaDao.fecha
+        partidaDao.fecha,
+        partidaDao.usuario_id.toInt()
     )
 
     return partida
@@ -32,7 +33,8 @@ fun Partida.toUpdatePartida(): UpdatePartida{
         nombrePartida = nombrePartida,
         resultado = resultado,
         estadistica = estadistica,
-        fecha = fecha
+        fecha = fecha,
+        usuarioId = usuarioId
     )
 }
 

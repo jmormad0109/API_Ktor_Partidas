@@ -6,11 +6,11 @@ import domain.repository.PartidaInterface
 class GetPartidasByNombre(val repository: PartidaInterface) {
     var nombre: String? = null
 
-    suspend operator fun invoke(): Partida? {
-        if (nombre?.isNullOrBlank() == true){
+    suspend operator fun invoke(userId: Int): Partida? {
+        if (nombre.isNullOrBlank()){
             return null
         }else{
-            return repository.getPartidasByNombre(nombre!!)
+            return repository.getPartidasByNombre(nombre!!, userId)
         }
     }
 }

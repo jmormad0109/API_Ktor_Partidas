@@ -7,9 +7,9 @@ import domain.repository.PartidaInterface
 class GetPartidaByResultadoUseCase(val repository: PartidaInterface) {
     var resultado: Resultado? = null
 
-    suspend operator fun invoke(): List<Partida>{
+    suspend operator fun invoke(userId: Int): List<Partida>{
         return resultado?.let {
-            repository.getPartidasByResultado(it)
+            repository.getPartidasByResultado(it, userId)
         }?:run {
             emptyList()
         }
