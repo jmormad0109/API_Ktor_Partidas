@@ -41,13 +41,18 @@ object UseCaseProviderPartidas {
     }
 
 
-    suspend fun insertPartida(partida: Partida?, userId: Int): Boolean{
+    suspend fun insertPartida(partida: Partida?): Boolean{
         if (partida == null){
             return false
         }
         insertPartidaUseCase.partida = partida
-        return insertPartidaUseCase(userId)
+        val res = insertPartidaUseCase()
 
+        if (!res){
+            return false
+        }else{
+            return true
+        }
     }
 
     suspend fun updatePartida(updatePartida: UpdatePartida?, nombre: String): Boolean{

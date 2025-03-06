@@ -95,38 +95,25 @@ fun Route.partidasRouting(){
                 call.respond(partida)
             }
 
+            get("{resultado}"){
+
+            }
+
             post(){
-                val token = call.request.headers["Authorization"]?.removePrefix("Bearer ")
-                if (token == null){
-                    call.respond(HttpStatusCode.Unauthorized, "No estás autorizado, Proporciona el token")
-                    return@post
-                }
-
-
-                if (!call.validateToken(token)){
-                    return@post
-                }
-
-                val userId = JwtConfig.getUserIdFromToken(token)
-                if (userId == null){
-                    call.respond(HttpStatusCode.Unauthorized, "Token no valido. No consta del id del usuario")
+                val token = call.request.headers["Authorization"]?.removePrefix("Bearer ") //token el header
+                val validate = call.validateToken(token!!)  //si llega aqúi, es porque el token se ha verificado antes automaticamente
+                if (!validate) {
                     return@post
                 }
 
                 try{
                     val partida = call.receive<Partida>()
-                    val res = UseCaseProviderPartidas.insertPartida(partida, userId)
+                    val res = UseCaseProviderPartidas.insertPartida(partida)
                     if (!res){
                         call.respond(HttpStatusCode.Conflict, "No se ha insertado la partida. Puede que ya exista.")
                         return@post
                     }
-
-                    val partidaInsertada = UseCaseProviderPartidas.getPartidasByNombre(partida.nombrePartida, userId)
-                    if (partidaInsertada == null){
-                        call.respond(HttpStatusCode.InternalServerError, "Error al obtener la partida que se ha insertado.")
-                        return@post
-                    }
-                    call.respond(HttpStatusCode.Created, partidaInsertada)
+                    call.respond(HttpStatusCode.Created, "Se ha insertado la nueva partida")
                 }catch (e: IllegalStateException){
                     call.respond(HttpStatusCode.BadRequest, "Error en el formato de envío de los datos")
                 }catch (e: JsonConvertException){

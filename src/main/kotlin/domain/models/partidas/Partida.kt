@@ -12,5 +12,5 @@ data class Partida(
     val resultado: Resultado,
     val estadistica: String,
     val fecha: String,
-    var usuarioId: Int
+    val usuarioId: Int
 )
