@@ -35,4 +35,12 @@ object JwtConfig {
             }else null
         }
     }
+
+    fun obtenerDniByToken(token: String): String?{
+        return try {
+            JWT.decode(token).getClaim("dni").asString()
+        }catch (e: Exception){
+            null
+        }
+    }
 }

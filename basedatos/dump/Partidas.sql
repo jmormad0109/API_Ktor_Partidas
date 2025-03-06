@@ -1,9 +1,12 @@
 CREATE TABLE Partida(
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(50) UNIQUE NOT NULL,
+    nombre VARCHAR(50) NOT NULL,
     resultado VARCHAR(20),
     estadistica VARCHAR(5),
-    fecha VARCHAR(12)
+    fecha VARCHAR(12),
+    dni_usuario VARCHAR(10) NOT NULL,
+    FOREIGN KEY (dni_usuario) REFERENCES Usuario(dni),
+    UNIQUE (nombre, dni_usuario)
 );
 
 CREATE TABLE Usuario(
@@ -14,24 +17,23 @@ CREATE TABLE Usuario(
     email VARCHAR(255),
     token VARCHAR(255)
 );
-ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='tabla de partidas';
 
-INSERT INTO Partida (nombre, resultado, estadistica, fecha) VALUES
-('Batalla1', 'GANADA', '85%', '01-02-2024'),
-('Batalla2', 'PERDIDA', '60%', '02-02-2024'),
-('Batalla3', 'EMPATADA', '50%', '03-02-2024'),
-('Batalla4', 'GANADA', '92%', '04-02-2024'),
-('Batalla5', 'PERDIDA', '45%', '05-02-2024'),
-('Batalla6', 'GANADA', '78%', '06-02-2024'),
-('Batalla7', 'PERDIDA', '33%', '07-02-2024'),
-('Batalla8', 'GANADA', '88%', '08-02-2024'),
-('Batalla9', 'EMPATADA', '50%', '09-02-2024'),
-('Batalla10', 'GANADA', '81%', '10-02-2024'),
-('Batalla11', 'GANADA', '95%', '12-02-2024'),
-('Batalla12', 'PERDIDA', '49%', '11-02-2024'),
-('Batalla13', 'PERDIDA', '38%', '13-02-2024'),
-('Batalla14', 'GANADA', '90%', '14-02-2024'),
-('Batalla15', 'GANADA', '100%', '15-02-2024');
+INSERT INTO Partida (nombre, resultado, estadistica, fecha, dni_usuario) VALUES
+('Batalla1', 'GANADA', '85%', '01-02-2024', '12345678A'),
+('Batalla2', 'PERDIDA', '60%', '02-02-2024', '34567890C'),
+('Batalla3', 'EMPATADA', '50%', '03-02-2024', '23456789B'),
+('Batalla4', 'GANADA', '92%', '04-02-2024', '12345678A'),
+('Batalla5', 'PERDIDA', '45%', '05-02-2024', '12345678A'),
+('Batalla6', 'GANADA', '78%', '06-02-2024', '34567890C'),
+('Batalla7', 'PERDIDA', '33%', '07-02-2024', '45678901D'),
+('Batalla8', 'GANADA', '88%', '08-02-2024', '45678901D'),
+('Batalla9', 'EMPATADA', '50%', '09-02-2024', '23456789B'),
+('Batalla10', 'GANADA', '81%', '10-02-2024', '45678901D'),
+('Batalla11', 'GANADA', '95%', '12-02-2024', '12345678A'),
+('Batalla12', 'PERDIDA', '49%', '11-02-2024', '34567890C'),
+('Batalla13', 'PERDIDA', '38%', '13-02-2024', '12345678A'),
+('Batalla14', 'GANADA', '90%', '14-02-2024', '23456789B'),
+('Batalla15', 'GANADA', '100%', '15-02-2024', '45678901D');
 
 INSERT INTO Usuario (name, dni, password, email, token) VALUES
 ('Antonio', '12345678A', '4ee3679892e6ac5a5b513eba7fd529d363d7a96508421c5dbd44b01b349cf514', 'antonio@gmail.com', ''),

@@ -1,16 +1,17 @@
 package domain.usecase.partidas
 
+import domain.models.partidas.Partida
 import domain.repository.PartidaInterface
 
 class DeletePartidauseCase(val repository: PartidaInterface) {
 
     var nombre: String? = null
 
-    suspend operator fun invoke(): Boolean {
+    suspend operator fun invoke(dniUsuario: String): Partida? {
         if (nombre == null){
-            return false
+            return null
         }else{
-            return repository.deletePartida(nombre!!)
+            return repository.deletePartida(nombre!!, dniUsuario)
         }
     }
 }

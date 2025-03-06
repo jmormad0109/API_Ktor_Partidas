@@ -7,4 +7,5 @@ object PartidaTable: IntIdTable("Partida") {
     val resultado = varchar("resultado", 20)
     val estadistica = varchar("estadistica", 5)
     val fecha = varchar("fecha", 12)
+    val dni_usuario = varchar("dni_usuario", 10)
 }

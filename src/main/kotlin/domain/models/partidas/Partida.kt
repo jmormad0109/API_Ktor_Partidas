@@ -12,4 +12,5 @@ data class Partida(
     val resultado: Resultado,
     val estadistica: String,
     val fecha: String,
+    val dniUsuario: String,
 )

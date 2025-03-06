@@ -11,5 +11,6 @@ class PartidaDao (id: EntityID<Int>): IntEntity(id){
     var resultado by PartidaTable.resultado
     var estadistica by PartidaTable.estadistica
     var fecha by PartidaTable.fecha
+    var dniUsuario by PartidaTable.dni_usuario
 
 }

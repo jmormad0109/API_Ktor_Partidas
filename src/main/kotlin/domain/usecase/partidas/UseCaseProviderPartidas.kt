@@ -19,14 +19,14 @@ object UseCaseProviderPartidas {
 
 
 
-    suspend fun getAllPartidas() = getAllPartidasUseCase()
+    suspend fun getAllPartidas(dniUsuario: String) = getAllPartidasUseCase(dniUsuario)
 
-    suspend fun getPartidasByNombre(nombre: String): Partida?{
+    suspend fun getPartidasByNombre(nombre: String, dniUsuario: String): Partida?{
         if (nombre.isNullOrBlank()){
             return null
         }
         getPartidasByNombreUsecase.nombre = nombre
-        val part = getPartidasByNombreUsecase()
+        val part = getPartidasByNombreUsecase(dniUsuario)
 
         if (part == null){
             return null
@@ -35,39 +35,39 @@ object UseCaseProviderPartidas {
         }
     }
 
-    suspend fun getPartidasByResultado(resultado: Resultado): List<Partida>{
+    suspend fun getPartidasByResultado(resultado: Resultado, dniUsuario: String): List<Partida>{
         getPartidaByResultadoUseCase.resultado = resultado
-        return getPartidaByResultadoUseCase()
+        return getPartidaByResultadoUseCase(dniUsuario)
     }
 
 
-    suspend fun insertPartida(partida: Partida?): Boolean{
+    suspend fun insertPartida(partida: Partida?, dniUsuario: String): Partida?{
         if (partida == null){
-            return false
+            return null
         }
         insertPartidaUseCase.partida = partida
-        val res = insertPartidaUseCase()
+        val res = insertPartidaUseCase(dniUsuario)
 
-        if (!res){
-            return false
+        if (res != null){
+            return getPartidasByNombre(res.nombrePartida, dniUsuario)
         }else{
-            return true
+            return null
         }
     }
 
-    suspend fun updatePartida(updatePartida: UpdatePartida?, nombre: String): Boolean{
+    suspend fun updatePartida(updatePartida: UpdatePartida?, nombre: String, dniUsuario: String): Partida?{
         if (updatePartida == null){
-            return false
+            return null
         }
 
         updatePartidaUseCae.nuevaPartida = updatePartida
         updatePartidaUseCae.nombre = nombre
-        return updatePartidaUseCae()
+        return updatePartidaUseCae(dniUsuario)
     }
 
-    suspend fun deletePartida(nombre: String): Boolean{
+    suspend fun deletePartida(nombre: String, dniUsuario: String): Partida?{
         deletePartidauseCase.nombre = nombre
-        return deletePartidauseCase()
+        return deletePartidauseCase(dniUsuario)
     }
 
 }
