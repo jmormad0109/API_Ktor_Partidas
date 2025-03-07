@@ -3,6 +3,7 @@ package domain.mapping
 import data.persistence.partidas.PartidaDao
 import data.persistence.usuarios.UsuarioDao
 import domain.models.partidas.Partida
+import domain.models.partidas.PartidaSinDni
 import domain.models.partidas.Resultado
 import domain.models.partidas.UpdatePartida
 import domain.models.usuarios.UpdateUsuario
@@ -18,6 +19,17 @@ fun PartidaDaoToPartida (partidaDao: PartidaDao) : Partida {
     )
 
     return partida
+}
+
+fun PartidaDaoToPartidaSinDni(partidaDao: PartidaDao): PartidaSinDni {
+    val partidaSinDni = PartidaSinDni(
+        partidaDao.nombrePartida,
+        partidaDao.resultado.toResultado(),
+        partidaDao.estadistica,
+        partidaDao.fecha
+    )
+
+    return partidaSinDni
 }
 
 fun String.toResultado(): Resultado {
@@ -37,6 +49,25 @@ fun Partida.toUpdatePartida(): UpdatePartida{
         dniUsuario = dniUsuario
     )
 }
+
+fun Partida.toPartidaSinDni(): PartidaSinDni{
+    return PartidaSinDni(
+        nombrePartida = nombrePartida,
+        resultado = resultado,
+        estadistica = estadistica,
+        fecha = fecha
+    )
+}
+
+fun UpdatePartida.toPartidaSinDni(): PartidaSinDni{
+    return PartidaSinDni(
+        nombrePartida = nombrePartida!!,
+        resultado = resultado!!,
+        estadistica = estadistica!!,
+        fecha = fecha!!
+    )
+}
+
 
 fun UsuarioDaoToUsuario(usuarioDao: UsuarioDao): Usuario{
     val usuario = Usuario(

@@ -1,7 +1,9 @@
 package domain.usecase.partidas
 
 import data.persistence.repository.PersistencePartidaRepository
+import domain.mapping.toPartidaSinDni
 import domain.models.partidas.Partida
+import domain.models.partidas.PartidaSinDni
 import domain.models.partidas.Resultado
 import domain.models.partidas.UpdatePartida
 
@@ -21,7 +23,7 @@ object UseCaseProviderPartidas {
 
     suspend fun getAllPartidas(dniUsuario: String) = getAllPartidasUseCase(dniUsuario)
 
-    suspend fun getPartidasByNombre(nombre: String, dniUsuario: String): Partida?{
+    suspend fun getPartidasByNombre(nombre: String, dniUsuario: String): PartidaSinDni?{
         if (nombre.isNullOrBlank()){
             return null
         }
@@ -31,7 +33,7 @@ object UseCaseProviderPartidas {
         if (part == null){
             return null
         }else{
-            return part
+            return part.toPartidaSinDni()
         }
     }
 
@@ -41,7 +43,7 @@ object UseCaseProviderPartidas {
     }
 
 
-    suspend fun insertPartida(partida: Partida?, dniUsuario: String): Partida?{
+    suspend fun insertPartida(partida: PartidaSinDni?, dniUsuario: String): PartidaSinDni?{
         if (partida == null){
             return null
         }
@@ -49,6 +51,7 @@ object UseCaseProviderPartidas {
         val res = insertPartidaUseCase(dniUsuario)
 
         if (res != null){
+
             return getPartidasByNombre(res.nombrePartida, dniUsuario)
         }else{
             return null

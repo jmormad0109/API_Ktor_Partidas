@@ -1,6 +1,8 @@
 package domain.usecase.partidas
 
+import domain.mapping.toPartidaSinDni
 import domain.models.partidas.Partida
+import domain.models.partidas.PartidaSinDni
 import domain.models.partidas.UpdatePartida
 import domain.models.usuarios.Usuario
 import domain.repository.PartidaInterface

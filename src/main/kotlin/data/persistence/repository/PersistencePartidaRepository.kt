@@ -4,7 +4,10 @@ import data.persistence.partidas.PartidaDao
 import data.persistence.partidas.PartidaTable
 import data.persistence.suspendTransaction
 import domain.mapping.PartidaDaoToPartida
+import domain.mapping.PartidaDaoToPartidaSinDni
+import domain.mapping.toPartidaSinDni
 import domain.models.partidas.Partida
+import domain.models.partidas.PartidaSinDni
 import domain.models.partidas.Resultado
 import domain.models.partidas.UpdatePartida
 import domain.repository.PartidaInterface
@@ -17,11 +20,11 @@ import org.jetbrains.exposed.sql.update
 class PersistencePartidaRepository: PartidaInterface {
 
     // Obtenemos todas las partidas
-    override suspend fun getAllPartidas(dniUsuario: String): List<Partida> {
+    override suspend fun getAllPartidas(dniUsuario: String): List<PartidaSinDni> {
         return  suspendTransaction {
             PartidaDao.find{
                 PartidaTable.dni_usuario eq dniUsuario
-            }.map(::PartidaDaoToPartida)
+            }.map(::PartidaDaoToPartidaSinDni)
         }
     }
 
@@ -45,7 +48,7 @@ class PersistencePartidaRepository: PartidaInterface {
     }
 
     // Insertamos una nueva partida, comprobando que el nombre no exista en la BBDD
-    override suspend fun postPartida(partida: Partida, dniUsuario: String): Partida? {
+    override suspend fun postPartida(partida: PartidaSinDni, dniUsuario: String): Partida? {
         val part = getPartidasByNombre(partida.nombrePartida, dniUsuario) //TODO Tiene que ser un atributo unico!!! (Por ahora el atributo unico es el nombre)
 
         return if (part == null){
@@ -82,7 +85,8 @@ class PersistencePartidaRepository: PartidaInterface {
         e.printStackTrace()
         }
         return if(filas == 1){
-            getPartidasByNombre(nombreNuevo, dniUsuario)
+            val nombreBusqueda = partida.nombrePartida ?: nombreNuevo
+            getPartidasByNombre(nombreBusqueda, dniUsuario)
         }else{
             null
         }

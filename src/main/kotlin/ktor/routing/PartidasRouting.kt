@@ -1,7 +1,9 @@
 package ktor.routing
 
+import domain.mapping.toPartidaSinDni
 import domain.mapping.toUpdatePartida
 import domain.models.partidas.Partida
+import domain.models.partidas.PartidaSinDni
 import domain.models.partidas.Resultado
 import domain.models.partidas.UpdatePartida
 import domain.security.JwtConfig
@@ -41,8 +43,8 @@ fun Route.partidasRouting(){
                     if (partida == null){
                         call.respond(HttpStatusCode.NotFound, "No se ha encontrado la partida")
                     }else{
-                        val upPartida = partida.toUpdatePartida()
-                        call.respond(upPartida)
+                        //val upPartida = partida.toUpdatePartida()
+                        call.respond(partida)
                     }
                     return@get
                 }
@@ -115,13 +117,13 @@ fun Route.partidasRouting(){
                 }
 
                 try{
-                    val partida = call.receive<Partida>()
+                    val partida = call.receive<PartidaSinDni>()
                     val res = UseCaseProviderPartidas.insertPartida(partida, dniUsuario)
                     if (res == null){
                         call.respond(HttpStatusCode.Conflict, "No se ha insertado la partida. Puede que ya exista.")
                         return@post
                     }
-                    call.respond(HttpStatusCode.Created, "Se ha insertado la nueva partida")
+                    call.respond(HttpStatusCode.Created, partida)
                 }catch (e: IllegalStateException){
                     call.respond(HttpStatusCode.BadRequest, "Error en el formato de envío de los datos")
                 }catch (e: JsonConvertException){
@@ -151,12 +153,13 @@ fun Route.partidasRouting(){
                     val nombre = call.parameters["nombrePartida"]
                     nombre?.let {
                         val updatePartida = call.receive<UpdatePartida>()
+                        //val updatePartida = partida.toUpdatePartida()
                         val res = UseCaseProviderPartidas.updatePartida(updatePartida, nombre, dniUsuario)
-                        if (res != null){
+                        if (res == null){
                             call.respond(HttpStatusCode.Conflict, "La partida no se ha modificádo. Puede que no exita")
                             return@patch
                         }
-                        call.respond(HttpStatusCode.Created, "Se ha actualizado la partida")
+                        call.respond(HttpStatusCode.Created, res.toPartidaSinDni())
                     }?: run{
                         call.respond(HttpStatusCode.BadRequest, "Debes identificar la partida que quieres actualizar" + nombre)
                         return@patch
@@ -165,6 +168,9 @@ fun Route.partidasRouting(){
                     call.respond(HttpStatusCode.BadRequest, "Error en el formato de envío de los datos o lectura de los datos")
                 }catch (e: JsonConvertException){
                     call.respond(HttpStatusCode.BadRequest, "Error en el formato del Json")
+                }catch (e: Exception){
+                    e.printStackTrace()
+                    call.respond(HttpStatusCode.BadRequest, "Algo falla " + e.message)
                 }
             }
 
@@ -191,7 +197,8 @@ fun Route.partidasRouting(){
                     if (res == null){
                         call.respond(HttpStatusCode.NotFound, "Partida no encontrada")
                     }else{
-                        call.respond(HttpStatusCode.OK, "Parida eliminada correctamente")
+                        call.respond(res.toPartidaSinDni())
+                        //call.respond(HttpStatusCode.OK, "Parida eliminada correctamente")
                     }
                 }?:run{
                     call.respond(HttpStatusCode.NoContent, "Tienes que identificar el nombre de la partida")
