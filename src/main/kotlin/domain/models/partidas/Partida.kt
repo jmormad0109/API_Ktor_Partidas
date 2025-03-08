@@ -3,7 +3,7 @@ package domain.models.partidas
 import kotlinx.serialization.Serializable
 
 enum class Resultado {
-    GANADA, PERDIDA, EMPATADA
+    GANADO, PERDIDO, EMPATE
 }
 
 @Serializable
