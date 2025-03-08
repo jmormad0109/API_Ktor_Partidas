@@ -4,7 +4,6 @@ import data.persistence.suspendTransaction
 import data.persistence.usuarios.UsuarioDao
 import data.persistence.usuarios.UsuarioTable
 import data.security.PasswordHash
-import domain.mapping.UsuarioDaoToUsuario
 import domain.mapping.toUsuario
 import domain.models.usuarios.UpdateUsuario
 import domain.models.usuarios.Usuario
