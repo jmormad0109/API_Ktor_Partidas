@@ -11,7 +11,7 @@ import ktor.validateToken
 import java.io.File
 
 fun Route.imgRouting(){
-    route("/image/{dni}/{image}") {
+    route("/images/{dni}/{image}") {
         authenticate("jwt-auth") {
 
             get(){
