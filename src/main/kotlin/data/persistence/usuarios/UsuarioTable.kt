@@ -8,5 +8,6 @@ object UsuarioTable: IntIdTable("Usuario") {
     val name = varchar("name", 80)
     val email = varchar("email", 255)
     val password = varchar("password", 255)
+    val urlImg = varchar("url_img", 255).nullable()
     val token = varchar("token", 255).nullable()
 }

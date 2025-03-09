@@ -1,5 +1,6 @@
 package data.persistence.usuarios
 
+import domain.models.usuarios.Usuario
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -10,5 +11,6 @@ class UsuarioDao(id: EntityID<Int>): IntEntity(id) {
     var dni by UsuarioTable.dni
     var email by UsuarioTable.email
     var password by UsuarioTable.password
+    var urlImg by UsuarioTable.urlImg
     var token by UsuarioTable.token
 }

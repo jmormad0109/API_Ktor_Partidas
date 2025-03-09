@@ -9,6 +9,9 @@ import domain.models.partidas.UpdatePartida
 import domain.models.usuarios.UpdateUsuario
 import domain.models.usuarios.Usuario
 
+
+// TODO mapeo de partidas
+
 fun PartidaDaoToPartida (partidaDao: PartidaDao) : Partida {
     val partida = Partida(
         partidaDao.nombrePartida,
@@ -68,17 +71,8 @@ fun UpdatePartida.toPartidaSinDni(): PartidaSinDni{
     )
 }
 
+// TODO mapeo de usuarios
 
-fun UsuarioDaoToUsuario(usuarioDao: UsuarioDao): Usuario{
-    val usuario = Usuario(
-        usuarioDao.name,
-        usuarioDao.dni,
-        usuarioDao.email,
-        usuarioDao.password,
-        usuarioDao.token
-    )
-    return usuario
-}
 
 fun Usuario.toUpdateUsuario(): UpdateUsuario {
     return UpdateUsuario(
@@ -86,6 +80,7 @@ fun Usuario.toUpdateUsuario(): UpdateUsuario {
         name = name,
         email = email,
         password = password,
+        urlImg = urlImg,
         token = token
     )
 }
@@ -96,6 +91,7 @@ fun UpdateUsuario.toUsuario(): Usuario {
         dni = dni!!,
         email = email!!,
         password = password!!,
+        urlImg = urlImg!!,
         token = token!!
     )
 }
@@ -106,6 +102,7 @@ fun UsuarioDao.toUsuario(): Usuario{
         this.dni,
         this.email,
         this.password,
+        this.urlImg?: "null",
         this.token?: "null"
     )
     return usuario

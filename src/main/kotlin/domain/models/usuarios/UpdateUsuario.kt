@@ -8,5 +8,6 @@ data class UpdateUsuario(
     var dni: String? = null,
     var email: String? = null,
     var password: String? = null,
+    var urlImg: String? = null,
     var token: String? = null
 )

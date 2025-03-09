@@ -8,5 +8,6 @@ data class Usuario(
     val dni: String,
     val email: String,
     val password: String,
+    var urlImg: String? = null,
     var token: String? = null
 )

@@ -1,27 +1,23 @@
 package domain.usecase.usuarios
 
+import data.persistence.repository.PersistenceUsuarioRepository
 import domain.models.usuarios.Usuario
 import domain.repository.UsuarioInteface
 import ktor.ApplicationContext
 
-class GetUsuarioByDniUseCase(val repository: UsuarioInteface) {
+class GetAllUsuariosUseCase(val repository: UsuarioInteface) {
 
-    var dni: String? = null
 
-    suspend operator fun invoke(): Usuario? {
-
-        return if (dni?.isNullOrBlank() == true){
-            null
-        }else{
-            val user = repository.getUsuarioByDni(dni!!)
-            user?.let { user->
+    suspend operator fun invoke(): List<Usuario>{
+        val listaUsuarios = repository.getAllUsuarios()
+        return listaUsuarios.map {
+            user ->
                 if (!user.urlImg.isNullOrBlank()){
                     val local = ApplicationContext.context.environment.config.property("ktor.urlPath.baseUrl").getString()
                     val relativePath = ApplicationContext.context.environment.config.property("ktor.urlPath.images").getString()
-                    user.urlImg = "$local/$relativePath/$dni/${user.urlImg}"
+                    user.urlImg = "$local/$relativePath/${user.dni}/${user.urlImg}"
                 }
-            }
-            return user
+            user
         }
     }
 }

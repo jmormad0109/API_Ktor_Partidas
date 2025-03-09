@@ -16,24 +16,14 @@ fun Route.imgRouting(){
 
             get(){
                 val token = call.request.headers["Authorization"]?.removePrefix("Bearer ")
-                if (token == null){
-                    call.respond(HttpStatusCode.Unauthorized, "No estás autorizado")
+                val validate = call.validateToken(token!!)
+                if (!validate)
                     return@get
-                }
 
-                if (!call.validateToken(token)){
-                    return@get
-                }
-
-                val dniUsuario = JwtConfig.obtenerDniByToken(token)
-                if (dniUsuario == null){
-                    call.respond(HttpStatusCode.Unauthorized, "Token no valido")
-                    return@get
-                }
-
+                val dni = call.parameters["dni"] ?: return@get call.respond(HttpStatusCode.BadRequest, "Necesitamos el DNI")
                 val nameImg = call.parameters["image"] ?: return@get call.respond(HttpStatusCode.BadRequest, "Tienes que pasar una imagen")
 
-                val path = ApplicationContext.context.environment.config.property("ktor.path.images").getString() + "/$dniUsuario"
+                val path = ApplicationContext.context.environment.config.property("ktor.path.images").getString() + "/$dni"
                 val img = File(path, nameImg)
 
                 if (!img.exists()){
